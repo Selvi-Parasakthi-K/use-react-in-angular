@@ -1,26 +1,226 @@
-<main class="main">
-  <spin-wheel-widget
-    segments='[
-    {"text":"Prize 1","fillStyle":"#FF6B6B","textColor":"#fff"},
-    {"text":"Prize 2","fillStyle":"#4ECDC4","textColor":"#fff"}
-  ]'
-    wheel-size="400"
-    center-button-color="#FFD700"
-    pointer-color="#1f1f1f"
-    stand-image="/assets/seasoul-stand.png"
-    outer-ring-image="/assets/spin-wheel-border.png"
-    center-image="/assets/logo.jfif"
-    spin-button-config='{
-    "label":"SPIN NOW",
-    "backgroundColor":"#E91E63",
-    "textColor":"#fff"
-  }'
-    spin-cta-text-style='{
-    "spinCtaText":"Spin & Unlock Surprises!",
-    "color":"#fff"
-  }'
-  >
-  </spin-wheel-widget>
-</main>
+<!-- app.html -->
+<div class="app-shell">
+  <!-- LEFT: Wheel Preview -->
+  <div class="preview-panel">
+    <div class="preview-header">
+      <span class="preview-badge">● LIVE PREVIEW</span>
+    </div>
+    <div class="wheel-stage">
+      <!--
+        KEY FIX: [attr.data-render-key]="renderKey"
+        This attribute changes on EVERY user interaction, which forces Angular
+        to re-process this element's bindings — causing the web component to
+        receive fresh object references for spinButtonConfig, spinCtaTextStyle, etc.
+        Without this, color pickers and text inputs on nested objects silently mutate
+        in-place and the web component never sees a "new" value.
+      -->
+      <spin-wheel-widget
+        [attr.data-render-key]="renderKey"
+        [segments]="segments"
+        [wheelSize]="wheelSize"
+        [centerButtonColor]="centerButtonColor"
+        [pointerColor]="pointerColor"
+        [standImage]="standImage"
+        [outerRingImage]="outerRingImage"
+        [centerImage]="centerImage"
+        [spinButtonConfig]="spinButtonConfig"
+        [spinCtaTextStyle]="spinCtaTextStyle"
+      ></spin-wheel-widget>
+    </div>
+  </div>
 
-<router-outlet />
+  <!-- RIGHT: Config Panel -->
+  <div class="config-panel">
+    <div class="config-header">
+      <h1 class="config-title">Wheel Configurator</h1>
+      <p class="config-subtitle">Changes reflect instantly on the preview</p>
+    </div>
+
+    <div class="config-body">
+      <!-- Wheel Settings -->
+      <section class="config-section">
+        <h3 class="section-title"><span class="section-icon">⚙️</span> Wheel Settings</h3>
+
+        <div class="field-row">
+          <div class="field flex-2">
+            <label>Wheel Size (px)</label>
+            <input
+              type="number"
+              [value]="wheelSize"
+              (input)="set('wheelSize', $any($event.target).value)"
+            />
+          </div>
+          <div class="field">
+            <label>Pointer Color</label>
+            <div class="color-field">
+              <input
+                type="color"
+                [value]="pointerColor"
+                (input)="set('pointerColor', $any($event.target).value)"
+              />
+              <span class="color-value">{{ pointerColor }}</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Center Color</label>
+            <div class="color-field">
+              <input
+                type="color"
+                [value]="centerButtonColor"
+                (input)="set('centerButtonColor', $any($event.target).value)"
+              />
+              <span class="color-value">{{ centerButtonColor }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Images -->
+      <section class="config-section">
+        <h3 class="section-title"><span class="section-icon">🖼️</span> Images</h3>
+
+        <div class="field">
+          <label>Stand Image Path</label>
+          <input
+            type="text"
+            [value]="standImage"
+            (input)="set('standImage', $any($event.target).value)"
+            placeholder="/assets/stand.png"
+          />
+        </div>
+        <div class="field">
+          <label>Outer Border Image</label>
+          <input
+            type="text"
+            [value]="outerRingImage"
+            (input)="set('outerRingImage', $any($event.target).value)"
+            placeholder="/assets/border.png"
+          />
+        </div>
+        <div class="field">
+          <label>Center Logo</label>
+          <input
+            type="text"
+            [value]="centerImage"
+            (input)="set('centerImage', $any($event.target).value)"
+            placeholder="/assets/logo.png"
+          />
+        </div>
+      </section>
+
+      <!-- Spin Button -->
+      <section class="config-section">
+        <h3 class="section-title"><span class="section-icon">🎯</span> Spin Button</h3>
+
+        <div class="field">
+          <label>Button Label</label>
+          <input
+            type="text"
+            [value]="spinLabel"
+            (input)="set('spinLabel', $any($event.target).value)"
+          />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Background</label>
+            <div class="color-field">
+              <input
+                type="color"
+                [value]="spinBgColor"
+                (input)="set('spinBgColor', $any($event.target).value)"
+              />
+              <span class="color-value">{{ spinBgColor }}</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Text Color</label>
+            <div class="color-field">
+              <input
+                type="color"
+                [value]="spinTextColor"
+                (input)="set('spinTextColor', $any($event.target).value)"
+              />
+              <span class="color-value">{{ spinTextColor }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Text -->
+      <section class="config-section">
+        <h3 class="section-title"><span class="section-icon">✍️</span> CTA Text</h3>
+
+        <div class="field">
+          <label>CTA Message</label>
+          <input
+            type="text"
+            [value]="ctaText"
+            (input)="set('ctaText', $any($event.target).value)"
+          />
+        </div>
+        <div class="field">
+          <label>CTA Text Color</label>
+          <div class="color-field">
+            <input
+              type="color"
+              [value]="ctaColor"
+              (input)="set('ctaColor', $any($event.target).value)"
+            />
+            <span class="color-value">{{ ctaColor }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Segments -->
+      <section class="config-section">
+        <div class="section-title-row">
+          <h3 class="section-title">
+            <span class="section-icon">🎡</span> Segments
+            <span class="badge">{{ segments.length }}</span>
+          </h3>
+          <button class="btn-add" (click)="addSegment()">+ Add</button>
+        </div>
+
+        <div class="segments-list">
+          <div *ngFor="let seg of segments; let i = index" class="segment-card">
+            <div class="segment-header">
+              <div class="segment-color-dot" [style.background]="seg.fillStyle"></div>
+              <span class="segment-label">Segment {{ i + 1 }}</span>
+              <button class="btn-remove" (click)="removeSegment(i)">✕</button>
+            </div>
+            <div class="field-row">
+              <div class="field flex-2">
+                <label>Label</label>
+                <input
+                  type="text"
+                  [value]="seg.text"
+                  (input)="onSegmentText(i, $any($event.target).value)"
+                />
+              </div>
+              <div class="field">
+                <label>Fill</label>
+                <div class="color-field compact">
+                  <input
+                    type="color"
+                    [value]="seg.fillStyle"
+                    (input)="onSegmentFill(i, $any($event.target).value)"
+                  />
+                </div>
+              </div>
+              <div class="field">
+                <label>Text</label>
+                <div class="color-field compact">
+                  <input
+                    type="color"
+                    [value]="seg.textColor"
+                    (input)="onSegmentTextColor(i, $any($event.target).value)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
