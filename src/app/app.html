@@ -1,0 +1,26 @@
+<main class="main">
+  <spin-wheel-widget
+    segments='[
+    {"text":"Prize 1","fillStyle":"#FF6B6B","textColor":"#fff"},
+    {"text":"Prize 2","fillStyle":"#4ECDC4","textColor":"#fff"}
+  ]'
+    wheel-size="400"
+    center-button-color="#FFD700"
+    pointer-color="#1f1f1f"
+    stand-image="/assets/seasoul-stand.png"
+    outer-ring-image="/assets/spin-wheel-border.png"
+    center-image="/assets/logo.jfif"
+    spin-button-config='{
+    "label":"SPIN NOW",
+    "backgroundColor":"#E91E63",
+    "textColor":"#fff"
+  }'
+    spin-cta-text-style='{
+    "spinCtaText":"Spin & Unlock Surprises!",
+    "color":"#fff"
+  }'
+  >
+  </spin-wheel-widget>
+</main>
+
+<router-outlet />
